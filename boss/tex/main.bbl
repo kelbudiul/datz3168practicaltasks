@@ -1,0 +1,49 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bellman(1958)]{bellman1958routing}
+R.~Bellman.
+\newblock On a routing problem.
+\newblock \emph{Quarterly of Applied Mathematics}, 16\penalty0 (1):\penalty0
+  87--90, 1958.
+
+\bibitem[Cormen et~al.(2009)Cormen, Leiserson, Rivest, and
+  Stein]{cormen2009introduction}
+T.~H. Cormen, C.~E. Leiserson, R.~L. Rivest, and C.~Stein.
+\newblock \emph{Introduction to Algorithms}.
+\newblock MIT Press, 3 edition, 2009.
+
+\bibitem[Dijkstra(1959)]{dijkstra1959note}
+E.~W. Dijkstra.
+\newblock A note on two problems in connexion with graphs.
+\newblock \emph{Numerische Mathematik}, 1\penalty0 (1):\penalty0 269--271,
+  1959.
+
+\bibitem[Hart et~al.(1968)Hart, Nilsson, and Raphael]{hart1968formal}
+P.~E. Hart, N.~J. Nilsson, and B.~Raphael.
+\newblock A formal basis for the heuristic determination of minimum cost paths.
+\newblock \emph{IEEE Transactions on Systems Science and Cybernetics},
+  4\penalty0 (2):\penalty0 100--107, 1968.
+
+\bibitem[Wikipedia(2023{\natexlab{a}})]{astar_wikipedia}
+Wikipedia.
+\newblock A* search algorithm, 2023{\natexlab{a}}.
+\newblock URL \url{https://en.wikipedia.org/wiki/A*_search_algorithm}.
+
+\bibitem[Wikipedia(2023{\natexlab{b}})]{bellman_ford_wikipedia}
+Wikipedia.
+\newblock Bellman–ford algorithm, 2023{\natexlab{b}}.
+\newblock URL
+  \url{https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm}.
+
+\bibitem[Wikipedia(2023{\natexlab{c}})]{floyd_warshall_wikipedia}
+Wikipedia.
+\newblock Floyd–warshall algorithm, 2023{\natexlab{c}}.
+\newblock URL
+  \url{https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm}.
+
+\end{thebibliography}

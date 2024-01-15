@@ -1,0 +1,379 @@
+\documentclass[a4paper, 12pt]{article}
+
+
+% Packages for various functionalities
+\usepackage{geometry}      % Adjust page margins
+\usepackage{graphicx}      % Include images
+\usepackage{amsmath}       % Math equations and symbols
+\usepackage{amssymb}       % Additional math symbols
+\usepackage{natbib}        % Bibliography
+\usepackage{lipsum}        % Sample text
+\usepackage{hyperref}      % Hyperlinks
+\usepackage{authblk}       % Author affiliations
+\usepackage{fancyhdr}      % Custom headers and footers
+\usepackage{titlesec}      % Customize section titles
+\usepackage{caption}       % Customize figure and table captions
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{hyperref}
+\usepackage[]{bibentry}
+\usepackage{mathpazo}
+\usepackage{setspace}      % Adjust line spacing
+\usepackage{listings}      % Code listings
+\usepackage{color}         % Define custom colors
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes, arrows.meta}
+% Define page margins
+\geometry{left=1in, right=1in, top=1in, bottom=1in}
+
+
+
+
+
+
+% Title
+\title{Design and Solution Overview\\Traffic Optimization System}
+\author{Elbek Tursunov}
+\affil{Latvijas Universitate\\Datoriku Fakultate}
+\affil[]{CID: DatZ3168 DSA\\Instructor: Professor Guntis Arnicans\\SID: et19042@students.lu.lv\\ Fall 7\textsuperscript{th}, 4\textsuperscript{th} year}
+\date{\today}
+
+
+
+
+
+\begin{document}
+	\begin{titlepage}
+		
+		\maketitle
+		\thispagestyle{empty} % Remove page numbering on this page
+		\begin{abstract}
+		\texttt{Pathfinding algorithms play a crucial role in various applications, ranging from robotics and artificial intelligence to network routing and video games. In the realm of traffic optimization systems, the significance of pathfinding algorithms cannot be overstated. This paper explores the design and solution overview for "Traffic Optimization System - Boss" study project. \\
+			The system utilizes real-time data collected by public services, encompassing critical parameters such as maximum car capacities, current traffic levels, peak traffic constraints, delays, and minimum travel times for specific street segments.}
+		\end{abstract}
+	\end{titlepage}
+	
+
+
+
+\section*{Requirements}
+
+\subsection*{Key Objectives}
+\begin{enumerate}
+	\item \textbf{Optimize Traffic Routes:} Develop a sophisticated system to optimize traffic routes for "The Boss" in Riga, Latvia, ensuring efficient and timely travel.
+	\item \textbf{Real-time Data Utilization:} Leverage real-time data from public services to obtain crucial information about street segments, including maximum car capacity, current traffic, peak capacity, and additional delay.
+	\item \textbf{Continuous Route Planning:} Implement a responsive algorithm capable of continuous route planning, dynamically adjusting to changing traffic conditions.
+\end{enumerate}
+
+\subsection*{Assumptions}
+\begin{enumerate}
+	\item The Boss's vehicle is equipped with a GPS system that consistently transmits coordinates to a central server.
+	\item Public services reliably provide detailed data on street segments.
+	\item The central server can receive destination information and promptly return an optimized route based on real-time data.
+	\item Intersections do not contribute to time or delay.
+	\item Street segments and their properties can change dynamically.
+\end{enumerate}
+
+\section*{Input File}
+
+\subsection*{Structure}
+\begin{enumerate}
+	\item \textbf{Line 0 [Optional]:} Optional flag which indicates update request on segments' data. If flag is set then following after flag segments need to be updated with new values (UPD: [Optional]).
+	\item \textbf{Line 1:} Number of street segments (N).
+	\item \textbf{Next N lines:}
+	\begin{itemize}
+		\item Segment ID (1 to N).
+		\item Maximum number of cars (Ci).
+		\item Current number of cars (Ni).
+		\item Maximum capacity during peak traffic (Mi).
+		\item Delay time for each car above Ci (Di).
+		\item Minimum time without obstacles (Ti).
+		\item List of Segment IDs that are directly connected to the current segment (ConSeg).
+	\end{itemize}
+	%\item \textbf{Line N+1:} The starting and destination segmentIDs for the Boss.
+\end{enumerate}
+
+\subsection*{Example}
+\begin{verbatim}
+	4
+	1 10 5 2 15 3 2 3
+	2 8 7 1 12 2 4
+	3 5 4 3 8 1 2
+	4 12 6 4 18 5 1
+	4 1
+
+\end{verbatim}
+
+\section*{Output File}
+
+\subsection*{Structure}
+\begin{enumerate}
+	\item \textbf{Line 1:} A single value representing the estimated arrival time at the destination.
+	\item \textbf{Line 2:} Segment ID and direction for each segment in the optimized route.
+	%\item \textbf{Line 3 [Optional]:} Optional flag which indicates new optimized route have been calculated based on the updated segments' data, followed by the new estimated arrival time and optimized route (UPD: [Optional]).
+\end{enumerate}
+
+\subsection*{Example}
+\begin{verbatim}
+	1
+	4 -> 1
+\end{verbatim}
+
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	\section*{Theory Overview}
+	\label{sec:theory-overview}
+	
+	\subsection*{1. Greedy Algorithm}
+	\begin{itemize}
+		\item \textbf{Idea:} Always choose the segment with the least time to minimize overall travel time.
+		\item \textbf{Advantages:} Simplicity and quick implementation.
+		\item \textbf{Disadvantages:} Potential oversight of long-term delays and dynamic changes in traffic.
+	 \item \textbf{Time Complexity:} The Greedy Algorithm exhibits a time complexity of $O(V^2)$ per iteration, where $V$ signifies the number of street segments. This quadratic complexity stems from the algorithm's iterative selection of the subsequent segment with the minimum travel time.
+	\item \textbf{Space Complexity:} The space complexity is $O(V)$, necessitated by the storage of distances associated with each street segment. The linear space complexity aligns with the algorithm's basic storage requirements.
+	\end{itemize}
+	
+	\subsection*{2. Dijkstra's Algorithm}
+	\begin{itemize}
+		\item \textbf{Idea:} Find the shortest path based on the sum of travel times.
+		\item \textbf{Advantages:} Considers the entire route, adaptable to dynamic changes.
+		\item \textbf{Disadvantages:} Computationally expensive for large networks. 
+		  \item \textbf{Time Complexity:} Dijkstra's Algorithm demonstrates a time complexity of $O((V + E) \log V)$, where $V$ and $E$ denote the number of street segments and edges, respectively. The logarithmic factor is introduced by the priority queue operations during exploration.
+		 \item \textbf{Space Complexity:} The space complexity amounts to $O(V)$, accounting for the storage of distances and the utilization of a priority queue. This linear space complexity reflects the algorithm's memory requirements.
+		 
+	\end{itemize}
+	
+	\subsection*{3. A* Algorithm}
+	\begin{itemize}
+		\item \textbf{Idea:} Combines aspects of Dijkstra's and Greedy algorithms using heuristic information.
+		\item \textbf{Advantages:} More efficient in finding the optimal route by considering both cost and heuristic.
+		\item \textbf{Disadvantages:} Requires a well-defined heuristic function.
+	\item \textbf{Time Complexity:} Similar to Dijkstra's Algorithm, the A* Algorithm exhibits a time complexity of $O((V + E) \log V)$. The logarithmic factor arises from priority queue operations during segment exploration, considering both cost and heuristic.
+	\item \textbf{Space Complexity:} The space complexity is $O(V)$, encompassing the storage of distances, heuristics, and the use of a priority queue. This linear space complexity aligns with the algorithm's storage demands.
+	
+	\end{itemize}
+	
+	\subsection*{4. Bellman-Ford Algorithm}
+	\begin{itemize}
+		\item \textbf{Idea:} Find the shortest paths from a single source to all other vertices, even with negative edge weights.
+		\item \textbf{Advantages:} Handles negative weights, adaptable to various scenarios.
+		\item \textbf{Disadvantages:} Inefficient for dense graphs. 
+		\item \textbf{Time Complexity:} The Bellman-Ford Algorithm manifests a time complexity of $O(V \cdot E)$, where $V$ and $E$ represent the number of street segments and edges, respectively. The quadratic factor emerges from the multiple relaxation steps, iterating through all segments and edges.
+		\item \textbf{Space Complexity:} The space complexity is $O(V)$, accounting for the storage of distances. This linear space complexity encapsulates the algorithm's memory utilization.
+		
+	\end{itemize}
+	
+	\subsection*{5. Floyd-Warshall Algorithm}
+	\begin{itemize}
+		\item \textbf{Idea:} Find the shortest paths between all pairs of vertices in a weighted graph.
+		\item \textbf{Advantages:} Handles negative weights, computes all-pair shortest paths.
+		\item \textbf{Disadvantages:} Inefficient for large graphs due to its cubic time complexity.
+		 \item \textbf{Time Complexity:} The Floyd-Warshall Algorithm displays a cubic time complexity of $O(V^3)$, where $V$ denotes the number of street segments. The algorithm's nested loops contribute to the computation of shortest paths between all pairs of segments.
+		\item \textbf{Space Complexity:} The space complexity amounts to $O(V^2)$, incorporating the storage of distances for each pair of segments. This quadratic space complexity aligns with the algorithm's memory requirements.
+		
+		
+	\end{itemize}
+	
+	\subsection*{6. Bidirectional Search}
+	\begin{itemize}
+		\item \textbf{Idea:} Simultaneously perform a forward and backward search to find a meeting point.
+		\item \textbf{Advantages:} Reduces time complexity for certain scenarios, particularly in unweighted graphs.
+		\item \textbf{Disadvantages:} Requires knowledge of the goal vertex in advance.
+		\item \textbf{Time Complexity:} The Bidirectional Search introduces a time complexity of $O(b^{d/2})$, where $b$ represents the branching factor and $d$ signifies the distance from the source to the destination. This complexity reflects the reduction in the effective search space achieved by simultaneously exploring segments from both directions.
+		\item \textbf{Space Complexity:} The space complexity is $O(V)$, encompassing the storage of distances for each street segment. This linear space complexity aligns with the algorithm's memory utilization.
+		
+	\end{itemize}
+	
+	
+	
+\newpage
+	\section*{Selected Approach}
+	\subsection*{Approach: A* Algorithm}
+	The algorithm is an extension of Dijkstra's algorithm and introduces a heuristic to guide the search efficiently. A* uses a combination of the actual cost to reach a node from the start node (known as "g-cost") and an estimated cost from the current node to the goal node (known as "h-cost" or heuristic cost). The total cost of a node is the sum of these two costs: f(n)=g(n)+h(n).
+	
+	
+	A* maintains two lists: an open list and a closed list. The open list contains nodes that are candidates for exploration, while the closed list includes nodes that have already been considered. The algorithm repeatedly selects the node with the lowest total cost from the open list, explores its neighbors, and updates their costs. This process continues until the goal node is reached or the open list becomes empty.
+	
+	The heuristic function is crucial in A* as it guides the algorithm toward the goal efficiently. It should be admissible (never overestimating the true cost to reach the goal) to guarantee the optimality of the solution.
+	
+	The A* algorithm is known for its effectiveness in finding optimal paths while being computationally efficient, especially when a good heuristic is available.
+	
+	\subsection*{Data Structures}
+	\begin{enumerate}
+		\item Priority Queue for efficient extraction of the segment with the minimum f-value.
+		\item Distance array to store the current distance from the starting segment to each segment.
+		\item Heuristic array to store estimated remaining distance to the destination for each segment.
+	\end{enumerate}
+	
+	
+	%\subsection*{Algorithm}
+	%\begin{enumerate}
+		%\item \textbf{Initialization:} Initialize distances %and heuristic values for all segments.
+		%\item \textbf{Priority Queue:} Create a priority %queue and insert all segments.
+	%	\item \textbf{Optimization Loop:}
+	%	\begin{enumerate}
+			%\item \textbf{Extraction:} Extract the segment %with the minimum f-value (cost + heuristic).
+			%\item \textbf{Update Distances:} Update distances %of adjacent segments if a shorter path is found.
+	%	\end{enumerate}
+	%	\item \textbf{Result:} Return the optimized route.
+	%\end{enumerate}
+
+	\begin{algorithm}
+		\caption{A* Algorithm}
+		\begin{algorithmic}[1]
+			\Procedure{A\_Star}{start, goal}
+			\State $openSet \gets \text{Priority Queue}()$
+			\State $closedSet \gets \text{Set}()$
+			\State $startNode \gets \text{Node}(start)$
+			\State $goalNode \gets \text{Node}(goal)$
+			\State $openSet.\text{add}(startNode)$
+			
+			\While{$openSet$ is not empty}
+			\State $currentNode \gets openSet.\text{pop()}$  \Comment{Get the node with the lowest $f$-score}
+			
+			\If{$currentNode == goalNode$}
+			\State \textbf{return} \textsc{ReconstructPath}($currentNode$)
+			\EndIf
+			
+			\State $closedSet.\text{add}(currentNode)$
+			
+			\For{\textbf{each} $neighbor$ \textbf{in} $currentNode.\text{neighbors}$}
+			\If{$neighbor$ \textbf{in} $closedSet$}
+			\State \textbf{continue}
+			\EndIf
+			
+			\State $tentative\_gScore \gets currentNode.gScore + \text{Distance}(currentNode, neighbor)$
+			
+			\If{$neighbor$ \textbf{not in} $openSet$ \textbf{or} $tentative\_gScore < neighbor.gScore$}
+			\State $neighbor.\text{cameFrom} \gets currentNode$
+			\State $neighbor.gScore \gets tentative\_gScore$
+			\State $neighbor.fScore \gets neighbor.gScore + \text{Heuristic}(neighbor, goalNode)$
+			
+			\If{$neighbor$ \textbf{not in} $openSet$}
+			\State $openSet.\text{add}(neighbor)$
+			\EndIf
+			\EndIf
+			\EndFor
+			\EndWhile
+			
+			\State \textbf{return} \textsc{Failure}
+			\EndProcedure
+			
+			\Procedure{ReconstructPath}{node}
+			\State $path \gets []$
+			\While{$node$ \textbf{is not} \textbf{null}}
+			\State $path.\text{add}(node)$
+			\State $node \gets node.\text{cameFrom}$
+			\EndWhile
+			\State \textbf{return} \textsc{Reverse}($path$)
+			\EndProcedure
+		\end{algorithmic}
+	\end{algorithm}
+	
+	\newpage
+
+	
+	
+	
+	
+	\section*{Initial Assessment of the Implementation}
+	
+	\subsection*{Challenges}
+	\begin{itemize}
+		\item Dynamic updates of traffic data.
+		\item Real-time coordination between the central server and public services.
+	\end{itemize}
+	
+	\subsection*{Ease of Implementation}
+	Moderate difficulty due to the need for dynamic updates and real-time data.
+	
+	\subsection*{Hardware Requirements}
+	Standard hardware with an internet connection for real-time updates.
+	
+	\subsection*{Response Time}
+	Expected to be responsive, taking into account real-time traffic updates.
+	
+	
+	
+	
+	
+	
+	
+	
+%	\section*{Test Samples}
+%	\subsection*{Test 1}
+%	\subsubsection*{Input}
+%	\begin{verbatim}
+%		3
+%		1 5 2 8 2 10
+%		2 10 5 15 3 12
+%		3 3 1 5 1 8
+%	\end{verbatim}
+	%
+	%\subsubsection*{Output}
+	%\begin{verbatim}
+%		2
+%		2 -> 3
+%	\end{verbatim}
+	
+%	\subsection*{Test 2}
+%	\subsubsection*{Input}
+%	\begin{verbatim}
+%		3
+%		1 5 2 8 2 10
+%		2 10 5 15 3 12
+%		3 3 1 5 1 8
+%	\end{verbatim}
+	%
+	%\subsubsection*{Output}
+	%\begin{verbatim}
+	%	2
+%		2 -> 3
+%	\end{verbatim}
+	
+	
+	
+	
+	
+	\newpage
+	\section*{Conclusion}
+	\label{sec:conclusion}
+	The analysis of pathfinding algorithms reveals a nuanced landscape where the selection of the most suitable algorithm depends on the specific requirements and characteristics of the problem at hand. Dijkstra's Algorithm stands out for its optimality and efficiency in non-negative weighted graphs, but its limitations in the face of negative weights prompt consideration of alternatives. A* Algorithm, with its combination of Dijkstra's principles and heuristic guidance, proves to be a versatile choice across diverse applications, yet its efficacy is contingent upon the quality of the heuristic employed.\\
+	
+	Breadth-First Search (BFS) excels in unweighted graphs, guaranteeing the shortest path, but its applicability diminishes in scenarios with weighted edges. Depth-First Search (DFS), while memory-efficient and useful for certain tasks like cycle detection, lacks the optimality guarantees essential for pathfinding applications. Bidirectional Search emerges as an intriguing solution, leveraging the efficiency gained by exploring from both ends simultaneously, yet it demands an accurate heuristic for optimal performance. The Bellman-Ford Algorithm, designed to handle negative weights and detect negative cycles, provides a crucial tool for scenarios where such elements are present. However, its inherent inefficiency in comparison to Dijkstra's Algorithm in non-negative graphs necessitates careful consideration.\\
+	
+	In practice, the choice of algorithm hinges on the nature of the graph, computational resources, and the necessity for optimality. As technology advances and problem domains evolve, ongoing research into enhancing existing algorithms and developing novel approaches will further refine the field of pathfinding, addressing the ever-growing complexity of modern applications.\\
+	
+	But at momentum, In conclusion, the chosen A* algorithm presents a balanced and efficient solution for optimizing traffic routes for "The Boss" in Riga. The incorporation of heuristic information enhances overall performance, and while implementation poses moderate challenges, it is anticipated to yield optimal results.
+	
+	
+	
+	
+	
+	
+	\newpage
+	\section*{Source Code}
+		The assumption is that an update event will activate another interface, and this triggered interface will subsequently invoke an algorithm to recalculate the optimal path based on the updated data. Currently, the repository contains only a basic implementation of the A* algorithm, lacking functionality for updating segment data.\\
+		\newline
+		\textbf{Repository link:} \href[]{https://github.com/kelbudiul/datz3168practicaltasks.git/}{https://github.com/kelbudiul/datz3168practicaltasks/}
+	
+	% Bibliography
+	% Include all references from the bibliography file
+	\nocite*
+	
+	% Your bibliography file (e.g., references.bib)
+	\bibliographystyle{plainnat}  % Choose the appropriate style
+	\bibliography{references}
+	% List all entries from the bibliography file
+	 
+	
+\end{document}
